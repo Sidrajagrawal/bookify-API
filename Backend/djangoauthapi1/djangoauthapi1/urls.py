@@ -11,5 +11,7 @@ urlpatterns = [
     path('api/auth/', include('account.urls')),
     path('api/post-sell/', include('sell_detail.urls')),
     path('api/trends/', include('Trending.urls')),
-    path('api/cart/', include('cart.urls'))
+    path('api/cart/', include('cart.urls')),
+    path('api/manga/', include('manga.urls')),
+    path('api/rent/', include('rent.urls')),
 ]

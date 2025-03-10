@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'sell_detail',
     'Trending',
     'cart',
-    'corsheaders'
+    'corsheaders',
+    'manga',
+    'rent',
 ]
 
 MIDDLEWARE = [
