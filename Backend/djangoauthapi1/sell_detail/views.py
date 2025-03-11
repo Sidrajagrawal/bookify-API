@@ -5,8 +5,40 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from sell_detail.models import SellDetail, BookPhoto
-from sell_detail.seriealizers import SellDetailSerializer, BookPhotoSerializer
+from sell_detail.models import SellDetail, BookPhoto,SellOrder
+from sell_detail.seriealizers import SellDetailSerializer, BookPhotoSerializer,SellOrderSerializer
+from order_detail.models import Order   
+
+class SellOrderAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """List all orders of the authenticated user"""
+        orders = SellOrder.objects.filter(buyer=request.user)
+        serializer = SellOrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        """Create an order when a user buys a book"""
+        book_id = request.data.get("book_id")
+        book = get_object_or_404(SellDetail, id=book_id)
+
+        # Prevent users from buying their own book
+        if book.user == request.user:
+            return Response({"error": "You cannot buy your own book"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create an order
+        order = SellOrder.objects.create(
+            buyer=request.user,
+            seller=book.user,
+            book=book,
+            order_status="pending"
+        )
+        serializer = SellOrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
 
 class SellDetailAPIView(APIView):
    permission_classes = [IsAuthenticated]

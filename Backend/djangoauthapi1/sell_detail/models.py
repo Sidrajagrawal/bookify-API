@@ -48,3 +48,21 @@ class BookPhoto(models.Model):
 
     def __str__(self):
         return f"Photo for {self.sell_detail.book_title}"
+
+class SellOrder(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("shipped", "Shipped"),
+        ("delivered", "Delivered"),
+        ("cancelled", "Cancelled"),
+    ]
+
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="buy_orders")
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sell_orders")
+    book = models.ForeignKey(SellDetail, on_delete=models.CASCADE, related_name="sell_orders")
+    order_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Order {self.id} - {self.book.book_title} ({self.order_status})"

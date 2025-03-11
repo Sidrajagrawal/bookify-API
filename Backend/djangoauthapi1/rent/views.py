@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from rent.models import RentableBook, Rental
 from rent.seriealizers import RentableBookSerializer, RentalSerializer
+from order_detail.models import Order
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Allows only admins to modify books; users can view."""
@@ -76,23 +77,13 @@ class RentableBookDetailView(APIView):
         book.delete()
         return Response({"message": "Book deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
+from order_detail.models import Order  # Import Order model
+
 class RentalListCreateView(APIView):
-    """Manage rental orders. Only authenticated users can rent books."""
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        """Allow users to filter active or expired rentals."""
-        show_expired = request.query_params.get("expired", "false").lower() == "true"
-
-        rentals = Rental.objects.filter(user=request.user)
-        if not show_expired:
-            rentals = rentals.filter(expires_at__gt=timezone.now())
-
-        serializer = RentalSerializer(rentals, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def post(self, request):
-        """Allow users to rent a book for a specified number of days."""
+        """User rents a book"""
         book_id = request.data.get("book")
         days = request.data.get("days", 1)
 
@@ -111,9 +102,16 @@ class RentalListCreateView(APIView):
             expires_at=expires_at
         )
 
+        # Create an Order when a book is rented
+        Order.objects.create(
+            user=request.user,
+            order_type="rent",
+            rental=rental,
+            status="processing"
+        )
+
         serializer = RentalSerializer(rental)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 class RentalDetailView(APIView):
     """Manage an individual rental order."""
     permission_classes = [permissions.IsAuthenticated]

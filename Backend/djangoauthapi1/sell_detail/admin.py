@@ -1,5 +1,11 @@
 from django.contrib import admin
-from sell_detail.models import SellDetail, BookPhoto
+from sell_detail.models import SellDetail, BookPhoto,SellOrder
+
+@admin.register(SellOrder)
+class SellOrderAdmin(admin.ModelAdmin):
+    list_display = ("id", "buyer", "seller", "book", "order_status", "created_at")
+    list_filter = ("order_status",)
+    search_fields = ("buyer__username", "seller__username", "book__book_title")
 
 @admin.register(SellDetail)
 class SellDetailAdmin(admin.ModelAdmin):

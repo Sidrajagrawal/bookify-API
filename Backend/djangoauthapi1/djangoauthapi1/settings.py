@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'manga',
     'rent',
+    'donate',
+    'order_detail',
 ]
 
 MIDDLEWARE = [

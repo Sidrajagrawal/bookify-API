@@ -1,5 +1,12 @@
 from rest_framework import serializers
 from .models import SellDetail, BookPhoto
+from .models import SellOrder
+
+class SellOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SellOrder
+        fields = "__all__"
+
 
 class SellDetailSerializer(serializers.ModelSerializer):
    class Meta:
