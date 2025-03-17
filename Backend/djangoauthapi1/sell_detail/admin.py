@@ -9,10 +9,9 @@ class SellOrderAdmin(admin.ModelAdmin):
 
 @admin.register(SellDetail)
 class SellDetailAdmin(admin.ModelAdmin):
-    list_display = ('book_title', 'book_author', 'book_quantity', 'book_expected_price', 'created_at', 'updated_at', 'deleted_at')
-    search_fields = ('book_title', 'book_author')
-    list_filter = ('created_at', 'updated_at', 'deleted_at')
-    readonly_fields = ('created_at', 'updated_at', 'deleted_at')  
+    list_display = [
+        'book_title', 'book_author', 'book_AI_price',  # Remove 'book_expected_price'
+    ]
 
 @admin.register(BookPhoto)
 class BookPhotoAdmin(admin.ModelAdmin):

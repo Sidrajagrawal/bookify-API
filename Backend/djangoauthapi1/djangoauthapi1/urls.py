@@ -16,4 +16,6 @@ urlpatterns = [
     path('api/rent/', include('rent.urls')),
     path('api/donate/', include('donate.urls')),
     path('api/order/', include('order_detail.urls')),
+    path('api/address/', include('Address.urls')),
+    path('api/upload-book/', include('upload_book.urls')),
 ]

@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'rent',
     'donate',
     'order_detail',
+    'Address',
+    'upload_book',
 ]
 
 MIDDLEWARE = [
